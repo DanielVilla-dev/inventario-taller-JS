@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MOTOSTOCK PRO — Taller & Repuestos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- 1. BARRA SUPERIOR -->
+  <header class="topbar">
+    <div class="contenedor topbar-contenido">
+      <div class="marca">
+        <div class="marca-icono" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3" />
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="marca-titulo">MOTOSTOCK <span class="texto-acento">PRO</span></h1>
+          <span class="marca-subtitulo">TELEMETRÍA DE BODEGA</span>
+        </div>
+      </div>
+
+      <div class="buscador-wrapper">
+        <svg class="buscador-icono" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <input
+          type="search"
+          id="buscador-global"
+          class="buscador-input"
+          placeholder="Buscar repuesto, SKU o moto..."
+          autocomplete="off"
+        />
+        <kbd class="atajo-tecla">/</kbd>
+      </div>
+
+      <div class="perfil-taller">
+        <span class="punto-estado" aria-hidden="true"></span>
+        <span>Daniel • Medellín</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="contenedor espacio-principal">
+
+    <!-- 2. PANEL DE INDICADORES KPI -->
+    <section class="grid-kpis" aria-label="Indicadores de bodega">
+      <article class="card-kpi">
+        <div class="kpi-top">
+          <span class="kpi-etiqueta">Valor Bodega</span>
+          <span class="badge-kpi badge-verde">COP</span>
+        </div>
+        <strong id="kpi-valor" class="kpi-numero">$0</strong>
+        <span class="kpi-ayuda">Capital total en inventario</span>
+      </article>
+
+      <article class="card-kpi">
+        <div class="kpi-top">
+          <span class="kpi-etiqueta">Stock Óptimo</span>
+          <span class="badge-kpi badge-azul">&gt; 15 uds</span>
+        </div>
+        <strong id="kpi-optimo" class="kpi-numero">0 refs</strong>
+        <span class="kpi-ayuda">Disponibilidad saludable</span>
+      </article>
+
+      <article id="card-kpi-criticos" class="card-kpi card-kpi-clicable" role="button" tabindex="0" title="Clic para filtrar alertas críticas">
+        <div class="kpi-top">
+          <span class="kpi-etiqueta">Alertas Críticas</span>
+          <span class="badge-kpi badge-alerta">&le; 15 uds</span>
+        </div>
+        <strong id="kpi-criticos" class="kpi-numero texto-alerta">0 refs</strong>
+        <span class="kpi-ayuda">Clic para filtrar urgentes</span>
+      </article>
+
+      <article class="card-kpi">
+        <div class="kpi-top">
+          <span class="kpi-etiqueta">Total Referencias</span>
+          <span class="badge-kpi badge-neutro">Activas</span>
+        </div>
+        <strong id="kpi-total" class="kpi-numero">0 refs</strong>
+        <span class="kpi-ayuda">SKUs registrados en sistema</span>
+      </article>
+    </section>
+
+    <!-- 3. WORKSPACE ASIMÉTRICO: CATÁLOGO (IZQUIERDA) + FORMULARIO (DERECHA) -->
+    <div class="grid-workspace">
+
+      <!-- SECCIÓN CATÁLOGO -->
+      <section class="panel-contenedor" aria-label="Catálogo de repuestos">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-titulo">Catálogo de Repuestos</h2>
+            <p id="contador-resultados" class="panel-subtitulo" aria-live="polite">Mostrando 0 de 0 repuestos</p>
+          </div>
+
+          <div class="controles-select">
+            <select id="filtro-moto" class="select-control" aria-label="Filtrar por motocicleta">
+              <option value="Todas">Todas las motos</option>
+              <option value="AKT NKD 125">AKT NKD 125</option>
+              <option value="Pulsar NS200">Pulsar NS200</option>
+              <option value="Yamaha FZ16">Yamaha FZ16</option>
+              <option value="Honda CB 190R">Honda CB 190R</option>
+              <option value="Suzuki GN 125">Suzuki GN 125</option>
+            </select>
+
+            <select id="orden-inventario" class="select-control" aria-label="Ordenar inventario">
+              <option value="defecto">Orden: Más recientes</option>
+              <option value="stock-asc">Stock: Menor a mayor</option>
+              <option value="precio-desc">Precio: Mayor a menor</option>
+              <option value="nombre-asc">Nombre: A - Z</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- PILLS DE CATEGORÍA -->
+        <div id="filtro-categorias" class="barra-pills" role="group" aria-label="Filtrar por categoría">
+          <button type="button" class="pill pill-activa" data-categoria="Todos">Todos</button>
+          <button type="button" class="pill" data-categoria="Motor">Motor</button>
+          <button type="button" class="pill" data-categoria="Frenos">Frenos</button>
+          <button type="button" class="pill" data-categoria="Arrastre">Arrastre</button>
+          <button type="button" class="pill" data-categoria="Eléctrico">Eléctrico</button>
+          <button type="button" class="pill" data-categoria="Suspensión">Suspensión</button>
+        </div>
+
+        <!-- CONTENEDOR DINÁMICO DE TARJETAS -->
+        <div id="catalogo" class="grid-catalogo"></div>
+      </section>
+
+      <!-- SECCIÓN FORMULARIO DE REGISTRO -->
+      <aside class="panel-contenedor panel-formulario" aria-label="Formulario de repuesto">
+        <div class="panel-header-form">
+          <h2 class="panel-titulo">Registrar Repuesto</h2>
+          <p class="panel-subtitulo">Ingreso de nueva referencia a bodega</p>
+        </div>
+
+        <form id="form-repuesto" class="formulario-stack" novalidate>
+          <div class="campo-grupo">
+            <label for="nombre" class="campo-label">Nombre del Repuesto</label>
+            <input type="text" id="nombre" class="campo-input" placeholder="Ej: Bujía NGK Iridium" />
+            <small id="error-nombre" class="mensaje-error" aria-live="polite"></small>
+          </div>
+
+          <div class="campo-grupo">
+            <label for="sku" class="campo-label">Código SKU</label>
+            <input type="text" id="sku" class="campo-input texto-mono" placeholder="Ej: SKU-NGK-99" />
+            <small id="error-sku" class="mensaje-error" aria-live="polite"></small>
+          </div>
+
+          <div class="campo-grupo">
+            <label for="categoria" class="campo-label">Categoría</label>
+            <select id="categoria" class="campo-input">
+              <option value="">Selecciona categoría...</option>
+              <option value="Motor">Motor</option>
+              <option value="Frenos">Frenos</option>
+              <option value="Arrastre">Arrastre</option>
+              <option value="Eléctrico">Eléctrico</option>
+              <option value="Suspensión">Suspensión</option>
+            </select>
+            <small id="error-categoria" class="mensaje-error" aria-live="polite"></small>
+          </div>
+
+          <div class="campo-grupo">
+            <label for="moto" class="campo-label">Moto Compatible</label>
+            <select id="moto" class="campo-input">
+              <option value="">Selecciona moto...</option>
+              <option value="AKT NKD 125">AKT NKD 125</option>
+              <option value="Pulsar NS200">Pulsar NS200</option>
+              <option value="Yamaha FZ16">Yamaha FZ16</option>
+              <option value="Honda CB 190R">Honda CB 190R</option>
+              <option value="Suzuki GN 125">Suzuki GN 125</option>
+            </select>
+            <small id="error-moto" class="mensaje-error" aria-live="polite"></small>
+          </div>
+
+          <div class="grid-doble-campo">
+            <div class="campo-grupo">
+              <label for="stock" class="campo-label">Stock Inicial</label>
+              <div class="stepper-stock">
+                <button type="button" id="btn-stock-menos" class="btn-stepper" aria-label="Disminuir stock">-</button>
+                <input type="number" id="stock" class="campo-input input-centro texto-mono" value="1" min="1" />
+                <button type="button" id="btn-stock-mas" class="btn-stepper" aria-label="Aumentar stock">+</button>
+              </div>
+              <small id="error-stock" class="mensaje-error" aria-live="polite"></small>
+            </div>
+
+            <div class="campo-grupo">
+              <label for="precio" class="campo-label">Precio (COP)</label>
+              <input type="number" id="precio" class="campo-input texto-mono" placeholder="45000" min="1" />
+              <small id="error-precio" class="mensaje-error" aria-live="polite"></small>
+            </div>
+          </div>
+
+          <div class="form-botones">
+            <button type="button" id="btn-limpiar-form" class="btn-secundario">Limpiar</button>
+            <button type="submit" class="btn-primario">Guardar Repuesto</button>
+          </div>
+        </form>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- 4. MODAL DE CONFIRMACIÓN DE ELIMINACIÓN -->
+  <div id="modal-eliminar" class="modal-overlay oculto" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+    <div class="modal-caja">
+      <div class="modal-icono-alerta" aria-hidden="true">!</div>
+      <h3 id="modal-titulo" class="modal-titulo">¿Eliminar repuesto del inventario?</h3>
+      <p class="modal-descripcion">
+        Estás a punto de retirar <strong id="modal-detalle-repuesto" class="texto-blanco"></strong> de la bodega.
+      </p>
+      <div class="modal-acciones">
+        <button type="button" id="btn-cancelar-eliminar" class="btn-secundario">Cancelar</button>
+        <button type="button" id="btn-confirmar-eliminar" class="btn-peligro">Eliminar definitivamente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. NOTIFICACIÓN FLOTANTE (TOAST + DESHACER) -->
+  <div id="toast-notificacion" class="toast oculto" role="status" aria-live="polite">
+    <span id="toast-mensaje"></span>
+    <button type="button" id="btn-deshacer" class="btn-deshacer oculto">Deshacer</button>
+  </div>
+
+  <!-- 6. SCRIPTS EN ORDEN DE DEPENDENCIA -->
+  <script src="js/datos.js"></script>
+  <script src="js/filtros.js"></script>
+  <script src="js/formulario.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

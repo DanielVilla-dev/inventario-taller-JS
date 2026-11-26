@@ -1,0 +1,870 @@
+/* ============================================================================
+   MOTOSTOCK PRO — SISTEMA DE DISEÑO (MOTORSPORT TELEMETRY)
+   ============================================================================ */
+
+:root {
+  --bg-asphalt: #0B0C0F;
+  --bg-gunmetal: #12141A;
+  --bg-elevated: #181B23;
+  --border-subtle: #252934;
+  --border-strong: #343A49;
+
+  --text-primary: #F4F4F5;
+  --text-secondary: #A1A1AA;
+  --text-muted: #71717A;
+
+  --accent-orange: #F97316;
+  --accent-orange-hover: #EA580C;
+  --accent-orange-soft: rgba(249, 115, 22, 0.14);
+
+  --status-ok: #10B981;
+  --status-ok-soft: rgba(16, 185, 129, 0.14);
+  --status-warn: #F59E0B;
+  --status-warn-soft: rgba(245, 158, 11, 0.14);
+  --status-danger: #EF4444;
+  --status-danger-soft: rgba(239, 68, 68, 0.14);
+  --status-info: #3B82F6;
+  --status-info-soft: rgba(59, 130, 246, 0.14);
+
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius-md: 8px;
+  --radius-lg: 14px;
+}
+
+/* RESET Y BASE */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-asphalt);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 32px 32px;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+.contenedor {
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.texto-acento { color: var(--accent-orange); }
+.texto-alerta { color: var(--status-danger); }
+.texto-blanco { color: var(--text-primary); }
+.texto-mono   { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* CLASE UTILITARIA DE VISIBILIDAD (CONTROLADA POR JS) */
+.oculto {
+  display: none !important;
+}
+
+/* ============================================================================
+   1. TOPBAR / HEADER
+   ============================================================================ */
+.topbar {
+  background-color: rgba(11, 12, 15, 0.88);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.topbar-contenido {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  height: 70px;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.marca-icono {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--accent-orange-soft);
+  border: 1px solid rgba(249, 115, 22, 0.35);
+  color: var(--accent-orange);
+  display: grid;
+  place-items: center;
+}
+
+.marca-titulo {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.1;
+}
+
+.marca-subtitulo {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+}
+
+.buscador-wrapper {
+  position: relative;
+  flex: 1;
+  max-width: 440px;
+}
+
+.buscador-icono {
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.buscador-input {
+  width: 100%;
+  background-color: var(--bg-gunmetal);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  padding: 0.6rem 2.4rem 0.6rem 2.5rem;
+  transition: border-color 0.2s ease;
+}
+
+.buscador-input:focus {
+  outline: none;
+  border-color: var(--accent-orange);
+}
+
+.atajo-tecla {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 0.1rem 0.4rem;
+}
+
+.perfil-taller {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-gunmetal);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.punto-estado {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--status-ok);
+  box-shadow: 0 0 8px var(--status-ok);
+}
+
+/* ============================================================================
+   2. TARJETAS KPI
+   ============================================================================ */
+.espacio-principal {
+  padding-top: 1.75rem;
+  padding-bottom: 3rem;
+}
+
+.grid-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.card-kpi {
+  background-color: var(--bg-gunmetal);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.15rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  transition: border-color 0.2s ease, transform 0.15s ease;
+}
+
+.card-kpi-clicable {
+  cursor: pointer;
+}
+
+.card-kpi-clicable:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+/* CLASE DINÁMICA: Activa cuando el usuario filtra por alertas críticas */
+.kpi-activo {
+  border-color: var(--accent-orange) !important;
+  box-shadow: 0 0 0 1px var(--accent-orange);
+  background-color: rgba(249, 115, 22, 0.06);
+}
+
+.kpi-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kpi-etiqueta {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.kpi-numero {
+  font-family: var(--font-mono);
+  font-size: 1.55rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.kpi-ayuda {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.badge-kpi {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+}
+
+.badge-verde  { background: var(--status-ok-soft); color: var(--status-ok); }
+.badge-azul   { background: var(--status-info-soft); color: var(--status-info); }
+.badge-alerta { background: var(--status-danger-soft); color: var(--status-danger); }
+.badge-neutro { background: var(--bg-elevated); color: var(--text-secondary); }
+
+/* ============================================================================
+   3. WORKSPACE (CATÁLOGO + FORMULARIO)
+   ============================================================================ */
+.grid-workspace {
+  display: grid;
+  grid-template-columns: 1fr 370px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.panel-contenedor {
+  background-color: var(--bg-gunmetal);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+}
+
+.panel-formulario {
+  position: sticky;
+  top: 90px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.15rem;
+}
+
+.panel-header-form {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.panel-titulo {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.panel-subtitulo {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-top: 0.15rem;
+}
+
+.controles-select {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.select-control {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  padding: 0.45rem 0.75rem;
+  cursor: pointer;
+}
+
+.select-control:focus {
+  outline: none;
+  border-color: var(--accent-orange);
+}
+
+/* PILLS DE CATEGORÍA */
+.barra-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.35rem;
+}
+
+.pill {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.4rem 0.9rem;
+  transition: all 0.15s ease;
+}
+
+.pill:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+/* CLASE DINÁMICA: Botón de categoría seleccionado */
+.pill-activa {
+  background-color: var(--accent-orange);
+  border-color: var(--accent-orange);
+  color: #0B0C0F;
+  font-weight: 600;
+}
+
+.pill-activa:hover {
+  color: #0B0C0F;
+}
+
+/* ============================================================================
+   4. GRILLA Y TARJETAS DE REPUESTOS (#catalogo)
+   ============================================================================ */
+.grid-catalogo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.tarjeta-repuesto {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  transition: border-color 0.2s ease;
+}
+
+.tarjeta-repuesto:hover {
+  border-color: var(--border-strong);
+}
+
+/* CLASE DINÁMICA: Borde izquierdo rojo cuando stock <= 15 */
+.tarjeta-critica {
+  border-left: 3px solid var(--status-danger);
+}
+
+.tarjeta-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.badge-categoria {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background-color: var(--bg-gunmetal);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+}
+
+.btn-eliminar-card {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.3rem;
+  display: grid;
+  place-items: center;
+  transition: all 0.15s ease;
+}
+
+.btn-eliminar-card:hover {
+  background-color: var(--status-danger-soft);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: var(--status-danger);
+}
+
+.tarjeta-body {
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.caja-blueprint {
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background-color: #0D1117;
+  background-image:
+    linear-gradient(rgba(59, 130, 246, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.12) 1px, transparent 1px);
+  background-size: 12px 12px;
+  border: 1px solid rgba(59, 130, 246, 0.28);
+  color: #60A5FA;
+  display: grid;
+  place-items: center;
+}
+
+.tarjeta-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.tarjeta-nombre {
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tarjeta-sku {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent-orange);
+  margin-top: 0.15rem;
+}
+
+.tarjeta-moto {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.2rem;
+}
+
+/* TACÓMETRO DE STOCK (10 BARRAS) */
+.tacometro-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.tacometro-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.76rem;
+}
+
+.tacometro-barras {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 3px;
+}
+
+.taco-barra {
+  height: 6px;
+  border-radius: 2px;
+  background-color: var(--bg-gunmetal);
+  border: 1px solid var(--border-subtle);
+}
+
+.taco-llena {
+  background-color: var(--status-ok);
+  border-color: var(--status-ok);
+}
+
+.taco-critica {
+  background-color: var(--status-danger);
+  border-color: var(--status-danger);
+}
+
+.tarjeta-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-subtle);
+  gap: 0.5rem;
+}
+
+.tarjeta-precio {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.tarjeta-acciones {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.btn-card-secundario {
+  background-color: var(--bg-gunmetal);
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.38rem 0.6rem;
+  transition: border-color 0.15s ease;
+}
+
+.btn-card-secundario:hover {
+  border-color: var(--accent-orange);
+  color: var(--accent-orange);
+}
+
+.btn-card-primario {
+  background-color: var(--accent-orange);
+  border: none;
+  border-radius: 6px;
+  color: #0B0C0F;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 0.4rem 0.75rem;
+  transition: background-color 0.15s ease;
+}
+
+.btn-card-primario:hover:not(:disabled) {
+  background-color: var(--accent-orange-hover);
+}
+
+.btn-card-primario:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.estado-vacio {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 1rem;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+}
+
+/* ============================================================================
+   5. FORMULARIO Y VALIDACIÓN POR CAMPO
+   ============================================================================ */
+.formulario-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.campo-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.campo-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.campo-input {
+  width: 100%;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  padding: 0.58rem 0.75rem;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.campo-input:focus {
+  outline: none;
+  border-color: var(--accent-orange);
+}
+
+/* CLASE DINÁMICA: Se aplica al input cuando falla su validación */
+.input-error {
+  border-color: var(--status-danger) !important;
+  background-color: rgba(239, 68, 68, 0.08);
+}
+
+.mensaje-error {
+  color: #F87171;
+  font-size: 0.74rem;
+  min-height: 1rem;
+  display: block;
+}
+
+.grid-doble-campo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.stepper-stock {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.input-centro {
+  text-align: center;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+.btn-stepper {
+  width: 34px;
+  height: 36px;
+  flex-shrink: 0;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.btn-stepper:hover {
+  border-color: var(--accent-orange);
+  color: var(--accent-orange);
+}
+
+.form-botones {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}
+
+.btn-primario {
+  background-color: var(--accent-orange);
+  border: none;
+  border-radius: var(--radius-md);
+  color: #0B0C0F;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.68rem 1rem;
+  transition: background-color 0.15s ease;
+}
+
+.btn-primario:hover {
+  background-color: var(--accent-orange-hover);
+}
+
+.btn-secundario {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.68rem 1rem;
+}
+
+.btn-secundario:hover {
+  border-color: var(--text-secondary);
+}
+
+/* ============================================================================
+   6. MODAL DE ELIMINACIÓN Y TOAST DESHACER
+   ============================================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(4px);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  z-index: 50;
+}
+
+.modal-caja {
+  background-color: var(--bg-gunmetal);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  max-width: 420px;
+  width: 100%;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.modal-icono-alerta {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 0.9rem;
+  border-radius: 50%;
+  background-color: var(--status-danger-soft);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: var(--status-danger);
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+.modal-titulo {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  margin-bottom: 0.45rem;
+}
+
+.modal-descripcion {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.35rem;
+}
+
+.modal-acciones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+
+.btn-peligro {
+  background-color: var(--status-danger);
+  border: none;
+  border-radius: var(--radius-md);
+  color: #FFFFFF;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.68rem 1rem;
+}
+
+.btn-peligro:hover {
+  background-color: #DC2626;
+}
+
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-left: 3px solid var(--accent-orange);
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  font-size: 0.85rem;
+  z-index: 60;
+}
+
+.btn-deshacer {
+  background: var(--accent-orange-soft);
+  border: 1px solid rgba(249, 115, 22, 0.4);
+  border-radius: 6px;
+  color: var(--accent-orange);
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+}
+
+/* ============================================================================
+   7. RESPONSIVE
+   ============================================================================ */
+@media (max-width: 1080px) {
+  .grid-workspace {
+    grid-template-columns: 1fr;
+  }
+  .panel-formulario {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-catalogo {
+    grid-template-columns: 1fr;
+  }
+  .perfil-taller {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-kpis {
+    grid-template-columns: 1fr;
+  }
+  .topbar-contenido {
+    flex-wrap: wrap;
+    height: auto;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  .buscador-wrapper {
+    order: 3;
+    max-width: 100%;
+    flex-basis: 100%;
+  }
+}
