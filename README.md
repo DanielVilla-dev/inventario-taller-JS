@@ -1,4 +1,4 @@
-<img width="1600" height="765" alt="boceto" src="https://github.com/user-attachments/assets/60d43907-d7cb-4950-b3f1-d7d5e046b6cd" /># MOTOSTOCK PRO — Gestión de Inventario para Taller de Motos
+# MOTOSTOCK PRO — Gestión de Inventario para Taller de Motos
 
 ## Equipo
 - Daniel Piedrahita Villa· DanielVilla-dev
