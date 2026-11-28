@@ -11,6 +11,7 @@
  *     con opción de "Deshacer" tras eliminar un repuesto.
  * ============================================================================
  */
+
 // Estado central de la interfaz (inventario en memoria, filtros activos y Deshacer)
 const estadoApp = {
   inventario: [],
@@ -488,10 +489,12 @@ function manejarDespacho(id) {
   const repuesto = estadoApp.inventario.find((item) => item.id === id);
   if (!repuesto || repuesto.stock <= 0) return;
 
+  const stockPrevio = repuesto.stock;
   estadoApp.inventario = actualizarStock(estadoApp.inventario, id, -1);
 
   render();
-  const nuevoStock = Math.max(0, repuesto.stock - 1);
+  const actualizado = estadoApp.inventario.find((item) => item.id === id);
+  const nuevoStock = actualizado ? actualizado.stock : Math.max(0, stockPrevio - 1);
   mostrarToast(`Despachado: ${repuesto.nombre} • Stock restante: ${nuevoStock} uds`);
 }
 
@@ -503,10 +506,13 @@ function manejarReabastecimiento(id) {
   const repuesto = estadoApp.inventario.find((item) => item.id === id);
   if (!repuesto) return;
 
+  const stockPrevio = repuesto.stock;
   estadoApp.inventario = actualizarStock(estadoApp.inventario, id, +1);
 
   render();
-  mostrarToast(`Ingreso +1: ${repuesto.nombre} • Stock actual: ${repuesto.stock + 1} uds`);
+  const actualizado = estadoApp.inventario.find((item) => item.id === id);
+  const nuevoStock = actualizado ? actualizado.stock : stockPrevio + 1;
+  mostrarToast(`Ingreso +1: ${repuesto.nombre} • Stock actual: ${nuevoStock} uds`);
 }
 
 // ============================================================================
